@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minesweeper</title>
+    <script src="../AngularJS/angular.js"></script>
+    <script>
+        var game=angular.module('MyGame',[]);
+        game.controller('gameCtrl',function ($scope) {
+            MinesweeperController($scope);
+            $scope.spotClick=function (spot) {
+                onClickSpot(spot);
+            }
+        });
+
+        function MinesweeperController($scope) {
+            $scope.mineField=createMineField();
+        }
+
+        function onClickSpot(spot) {
+            if (spot.content==="mine"){
+                spot.isCovered=false;
+                alert("You losed!");
+                location.reload();
+            }
+            else {
+                spot.isCovered=false;
+            }
+        }
+
+        function createMineField() {
+            var mineField={};
+            mineField.rows = [];
+
+            for (var i=0;i<16;i++){
+                var row={};
+                row.spots=[];
+
+                for (var j=0;j<16;j++){
+                    var spot={};
+                    spot.isCovered=true;
+                    spot.content="empty";
+                    row.spots.push(spot);
+                }
+                mineField.rows.push(row);
+            }
+            placeRandomMines(mineField);
+            calcAllNumbers(mineField);
+            return mineField;
+        }
+
+        
+        function getSpot(mineField,row,col) {
+            return mineField.rows[row].spots[col];
+        }
+        
+        function placeRandomMine(mineField) {
+            var row=Math.round(Math.random()*15);
+            var col=Math.round(Math.random()*15);
+            var spot1=getSpot(mineField,row,col);
+            spot1.content="mine";
+        }
+        function placeRandomMines(mineField) {
+            for (var i=0;i<50;i++){
+                placeRandomMine(mineField);
+            }
+        }
+        function calcNumber(mineField,row,col) {
+            var count="0";
+            for (var i=-1;i<=1;i++){
+                for (var j=-1;j<=1;j++){
+                    if (i!==0||j!==0){
+                        if(mineField.rows[row+i]&&mineField.rows[row+i].spots[col+j]){
+                            if(mineField.rows[row+i].spots[col+j].content==="mine"){
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+            getSpot(mineField,row,col).content=(count==="0")?"empty":count;
+        }
+        function calcAllNumbers(mineField) {
+            for (var i=0;i<16;i++){
+                for (var j=0;j<16;j++){
+                    if (getSpot(mineField,i,j).content!=="mine")
+                        calcNumber(mineField,i,j);
+                }
+            }
+        }
+    </script>
+
+    <style type="text/css">
+        .minefield {
+            line-height:0;
+            border-spacing:0;
+        }
+
+        .minefield td {
+            padding:0
+        }
+    </style>
+</head>
+<body>
+<div ng-app="MyGame" ng-controller="gameCtrl" >
+    <table border="0" class="minefield">
+        <tr ng-repeat="row in mineField.rows">
+            <td ng-repeat="spot in row.spots" ng-click="spotClick(spot)">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/covered.png" ng-if="spot.isCovered">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/empty.png" ng-if="!spot.isCovered && spot.content=='empty'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/mine-wrong.png" ng-if="!spot.isCovered && spot.content=='mine'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-1.png" ng-if="!spot.isCovered && spot.content=='1'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-2.png" ng-if="!spot.isCovered && spot.content=='2'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-3.png" ng-if="!spot.isCovered && spot.content=='3'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-4.png" ng-if="!spot.isCovered && spot.content=='4'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-5.png" ng-if="!spot.isCovered && spot.content=='5'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-6.png" ng-if="!spot.isCovered && spot.content=='6'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-7.png" ng-if="!spot.isCovered && spot.content=='7'">
+                <img src="../Data/images-for-game/angularjs-minesweeper-game/number-8.png" ng-if="!spot.isCovered && spot.content=='8'">
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

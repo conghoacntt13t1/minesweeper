@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minesweeper</title>
+    <script src="../AngularJS/angular.js"></script>
+</head>
+<body>
+
+<div ng-app="MyApp" ng-controller="personCtrl">
+
+    <p>Họ: <input type="text" ng-model="firstName"></p>
+    <p>Tên: <input type="text" ng-model="lastName"></p>
+    <p>Họ và tên: {{firstName+" "+lastName}}</p>
+    <p><input type="button" name="add" value="ADD" ng-click="addNewStudent()"></p>
+
+    <ul ng-repeat="Student in listStudent">
+        <li>{{Student.firstName+" "+Student.lastName}}</li>
+    </ul>
+
+</div>
+<script>
+    var app=angular.module('MyApp',[]);
+    app.controller('personCtrl',function ($scope) {
+        $scope.firstName='Trần Văn';
+        $scope.lastName='Tí';
+
+        $scope.listStudent=[];
+
+        $scope.fullName=function () {
+            return $scope.fullName+$scope.lastName;
+        };
+        $scope.addNewStudent=function () {
+            $scope.listStudent.push({
+                    firstName : $scope.firstName,
+                    lastName  : $scope.lastName
+//                    fullName: $scope.fullName()
+                }
+            );
+            console.log($scope.listStudent);
+        };
+    });
+</script>
+
+</body>
+</html>
